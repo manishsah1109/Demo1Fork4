@@ -13,3 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - task: Bash@3
+         displayName: 'Install sfdxcli and plugins'
+         name: 'Install_SFDXCLI'
+         inputs:
+           targetType:  'inline'
+           script: |
+             npm install --global sfdx-cli@latest
+             echo 'y' | sfdx plugins:install sfdx-git-delta
+
