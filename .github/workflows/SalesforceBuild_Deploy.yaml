@@ -17,6 +17,7 @@ jobs:
       - name: Install Salesforce CLI
         run: |
           npm install sfdx-cli --global
+          echo 'y' | sfdx plugins:install sfdx-git-delta
 
       - name: Authenticate to Salesforce
         run: |
