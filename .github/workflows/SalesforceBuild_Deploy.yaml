@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate Delta Package
         run: |
-          sfdx sgd:source:delta --to HEAD --from HEAD^ --output $(Build.ArtifactStagingDirectory)  --generate-delta
+          sfdx sgd:source:delta --to HEAD --from HEAD^ --output output  --generate-delta
 
       - name: Publish Build Artifact
         uses: actions/upload-artifact@v3
