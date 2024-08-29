@@ -1,24 +1,39 @@
-name: CI Pipeline
+name: Salesforce CI/CD
 
 on:
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
-  build:
+  salesforce-ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - task: Bash@3
-        displayName: 'Install sfdxcli and plugins'
-        name: 'Install_SFDXCLI'
-        inputs:
-          targetType:  'inline'
-          script: |
-            npm install --global sfdx-cli@latest
-            echo 'y' | sfdx plugins:install sfdx-git-delta
+      - name: Install Salesforce CLI
+        run: |
+          npm install sfdx-cli --global
 
+      - name: Authenticate to Salesforce
+        run: |
+          echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
+          sfdx auth:sfdxurl:store -f auth_url.txt -a MyOrg
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+
+      - name: Generate Delta Package
+        run: |
+          git diff --name-only origin/main...HEAD > delta.txt
+          cat delta.txt
+
+      - name: Convert Source to Metadata API Format
+        run: |
+          sfdx force:source:convert -r force-app -d output_dir -p $(cat delta.txt)
+
+      - name: Validate Deployment
+        run: |
+          sfdx force:mdapi:deploy -d output_dir -u MyOrg --checkonly --testlevel RunLocalTests
