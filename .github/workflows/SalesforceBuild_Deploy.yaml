@@ -24,6 +24,11 @@ jobs:
           echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
           sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
 
+      - name: Build project
+        run: |
+          mkdir -p output
+          echo "Build output" > output/build.txt
+
       - name: Generate Delta Package
         run: |
           sfdx sgd:source:delta --to HEAD --from HEAD^ --output output  --generate-delta
