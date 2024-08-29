@@ -25,13 +25,14 @@ jobs:
 
       - name: Generate Delta Package
         run: |
-          git diff --name-only origin/main...HEAD > delta.txt
-          cat delta.txt
+          sfdx sgd:source:delta --to HEAD --from HEAD^ --output $(Build.ArtifactStagingDirectory)  --generate-delta
 
-      - name: Convert Source to Metadata API Format
-        run: |
-          sfdx force:source:convert -r force-app -d output_dir -p $(cat delta.txt)
+      - name: Publish Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: output/
 
       - name: Validate Deployment
         run: |
-          sfdx force:mdapi:deploy -d output_dir -u MyOrg --checkonly --testlevel RunLocalTests
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests
