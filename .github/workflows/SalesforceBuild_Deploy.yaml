@@ -1,0 +1,44 @@
+name: Salesforce CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  salesforce-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install sfdx-cli --global
+          echo 'y' | sfdx plugins:install sfdx-git-delta
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
+          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+
+      - name: Build project
+        run: |
+          mkdir -p output
+          echo "Build output" > output/build.txt
+
+      - name: Generate Delta Package
+        run: |
+          sfdx sgd:source:delta --to HEAD --from HEAD^ --output output  --generate-delta
+
+      - name: Publish Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: output/
+
+      - name: Validate Deployment
+        run: |
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests
