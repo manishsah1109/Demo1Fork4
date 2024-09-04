@@ -31,11 +31,11 @@ def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandb
     println "Data insert successful for $csvFilePath."
 }
 
-def csvDirectoryPath = 'path/to/your/csvfiles/'
-def sdlFilePath = 'path/to/your/file.sdl'
-def sandboxAlias = 'your_sandbox_alias'
-def sObjectType = 'MyObject__c' // Replace with your Salesforce object API name
-def externalId = 'SDL_ID__c' // Replace with your external ID field
+def csvDirectoryPath = 'file/Account.csv'
+def sdlFilePath = 'file/Account.sdl'
+def sandboxAlias = 'develop'
+def sObjectType = 'Account' // Replace with your Salesforce object API name
+def externalId = 'AccountNumber' // Replace with your external ID field
 
 // Load SDL content
 def sdlContent = loadSdl(sdlFilePath)
