@@ -1,1 +1,3 @@
-println "check the groovy script1."
+// HelloWorld.groovy
+println "Hello, World!"
+
