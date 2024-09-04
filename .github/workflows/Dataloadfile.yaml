@@ -1,7 +1,7 @@
 name: Run Salesforce DataLoader with Multiple CSV Files
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
