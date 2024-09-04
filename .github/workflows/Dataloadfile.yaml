@@ -33,7 +33,7 @@ jobs:
       - name: Test groovy Script
         env:
           SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
-        run: test.groovy
+        run: groovy test.groovy
 
       - name: Run DataLoader Script
         env:
