@@ -30,6 +30,11 @@ jobs:
           echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
           sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
 
+      - name: Test groovy Script
+        env:
+          SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
+        run: test.groovy
+
       - name: Run DataLoader Script
         env:
           SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
