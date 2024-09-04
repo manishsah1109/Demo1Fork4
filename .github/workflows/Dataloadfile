@@ -1,0 +1,35 @@
+name: Run Salesforce DataLoader with Multiple CSV Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-dataloader:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+
+      - name: Install Groovy
+        run: sudo apt-get install -y groovy
+
+      - name: Install Salesforce CLI
+        run: npm install -g sfdx-cli
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
+          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+
+      - name: Run DataLoader Script
+        env:
+          SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
+        run: groovy dataload.groovy
