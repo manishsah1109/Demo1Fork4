@@ -32,13 +32,13 @@ def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandb
 }
 
 def csvDirectoryPath = '../file1/Account.csv'
-//def sdlFilePath = '../file/Account.sdl'
+def sdlFilePath = '../file/Account.sdl'
 def sandboxAlias = 'develop'
 def sObjectType = 'Account' // Replace with your Salesforce object API name
 def externalId = 'AccountNumber' // Replace with your external ID field
 
 // Load SDL content
-def sdlContent = loadSdl("../file/Account.sdl")
+def sdlContent = loadSdl(sdlFilePath)
 
 // Process each CSV file in the directory
 new File(csvDirectoryPath).eachFile { file ->
