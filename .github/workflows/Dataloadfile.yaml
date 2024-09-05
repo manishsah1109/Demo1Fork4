@@ -34,6 +34,9 @@ jobs:
         env:
           SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
         run: groovy test.groovy
+        
+      - name: Access config file
+        run: cat file/Account.sdl
 
       - name: Run DataLoader Script
         env:
