@@ -44,7 +44,9 @@ jobs:
       #  run: sudo apt-get install -y groovy
 
       - name: Install Salesforce CLI
-        run: npm install -g sfdx-cli
+        run: |
+          npm install -g sfdx-cli
+          sfdx version
 
       - name: Authenticate to Salesforce
         run: |
