@@ -66,4 +66,7 @@ jobs:
       - name: Run DataLoader Script
         env:
           SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
-        run: groovy dataload.groovy
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          groovy dataload.groovy
