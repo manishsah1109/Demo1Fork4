@@ -9,7 +9,7 @@ def loadCsv(String filePath) {
     return csvRecords.getRecords()
 }
 
-// Function to load SDL data
+// Function to load SDL data1
 def loadSdl(String filePath) {
     return new File(filePath).text
 }
