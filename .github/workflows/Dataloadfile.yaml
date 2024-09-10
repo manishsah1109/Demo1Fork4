@@ -48,7 +48,7 @@ jobs:
         run: |
           export SFDX_HOME=$PWD/libs/sfdx-cli
           export PATH=$SFDX_HOME/bin:$PATH
-          sfdx --version  # Check SFDX CLI version
+          sf --version  # Check SFDX CLI version
           
       #- name: Install Salesforce CLI
        # run: |
