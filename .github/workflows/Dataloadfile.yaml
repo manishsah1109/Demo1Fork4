@@ -24,6 +24,10 @@ jobs:
       #- name: Checkout Tooling Branch (for Groovy and SFDX CLI)
        # run: git checkout Dataloader1 -- libs/
 
+      - name: Make Groovy executable
+        run: chmod +x libs/groovy/bin/groovy
+
+
       # Set up Groovy from the libs folder
       - name: Set Up Groovy
         run: |
