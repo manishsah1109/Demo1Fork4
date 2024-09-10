@@ -19,8 +19,20 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Install Groovy
-        run: sudo apt-get install -y groovy
+
+      # Checkout the tooling-branch to get the pre-installed libraries
+      - name: Checkout Tooling Branch (for Groovy and SFDX CLI)
+        run: git checkout tooling-branch -- libs/
+
+      # Set up Groovy from the libs folder
+      - name: Set Up Groovy
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          groovy --version  # Check Groovy version
+
+     # - name: Install Groovy
+      #  run: sudo apt-get install -y groovy
 
       - name: Install Salesforce CLI
         run: npm install -g sfdx-cli
