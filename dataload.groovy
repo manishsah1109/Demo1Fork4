@@ -35,7 +35,7 @@ def csvDirectoryPath = 'file/'
 def sdlFilePath = 'file/Account.sdl'
 def sandboxAlias = 'develop'
 def sObjectType = 'Account' // Replace with your Salesforce object API name
-def externalId = 'Name' // Replace with your external ID field
+def externalId = 'Id' // Replace with your external ID field
 
 // Load SDL content
 def sdlContent = loadSdl(sdlFilePath)
