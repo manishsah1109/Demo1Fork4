@@ -24,6 +24,9 @@ jobs:
       #- name: Checkout Tooling Branch (for Groovy and SFDX CLI)
        # run: git checkout Dataloader1 -- libs/
 
+      - name: Print Current Directory
+        run: pwd
+
       - name: Make Groovy executable
         run: chmod +x libs/groovy/bin/groovy
 
@@ -33,6 +36,8 @@ jobs:
         run: |
           export GROOVY_HOME=$PWD/libs/groovy
           export PATH=$GROOVY_HOME/bin:$PATH
+          echo "GROOVY_HOME=$GROOVY_HOME"
+          echo "PATH=$PATH"
           groovy --version  # Check Groovy version
 
      # - name: Install Groovy
