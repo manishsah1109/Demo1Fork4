@@ -22,7 +22,7 @@ jobs:
 
       # Checkout the tooling-branch to get the pre-installed libraries
       - name: Checkout Tooling Branch (for Groovy and SFDX CLI)
-        run: git checkout tooling-branch -- libs/
+        run: git checkout Dataloader1 -- libs/
 
       # Set up Groovy from the libs folder
       - name: Set Up Groovy
