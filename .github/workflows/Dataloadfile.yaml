@@ -31,7 +31,7 @@ jobs:
       # Set up Groovy from the libs folder
       - name: Set Up Groovy
         run: |
-          export GROOVY_HOME=libs/groovy
+          export GROOVY_HOME=$PWD/libs/groovy
           export PATH=$GROOVY_HOME/bin:$PATH
           groovy --version  # Check Groovy version
 
