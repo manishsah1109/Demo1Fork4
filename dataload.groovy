@@ -15,12 +15,11 @@ def loadSdl(String filePath) {
 }
 
 // Function to execute Salesforce Bulk API insert
-def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandboxAlias, String sObjectType) {
+def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandboxAlias, String sObjectType, String externalId) {
     println "Authentication successful."
 
     println "Executing DataLoader insert for $csvFilePath..."
-    //def dataInsertCmd = "sfdx force:data:bulk:upsert --sobjecttype $sObjectType --csvfile $csvFilePath --externalid $externalId --wait 10"
-    def dataInsertCmd = "sfdx force:data:bulk:upsert --sobjecttype $sObjectType --csvfile $csvFilePath --wait 10"
+    def dataInsertCmd = "sfdx force:data:bulk:upsert --sobjecttype $sObjectType --csvfile $csvFilePath --externalid $externalId --wait 10"
     def insertProcess = dataInsertCmd.execute()
     insertProcess.waitFor()
 
@@ -36,7 +35,7 @@ def csvDirectoryPath = 'file/'
 def sdlFilePath = 'file/Account.sdl'
 def sandboxAlias = 'develop'
 def sObjectType = 'Account' // Replace with your Salesforce object API name
-//def externalId = 'id' // Replace with your external ID field
+def externalId = 'Name' // Replace with your external ID field
 
 // Load SDL content
 def sdlContent = loadSdl(sdlFilePath)
@@ -44,7 +43,7 @@ def sdlContent = loadSdl(sdlFilePath)
 // Process each CSV file in the directory
 new File(csvDirectoryPath).eachFile { file ->
     if (file.name.endsWith(".csv")) {
-        executeSalesforceInsert(file.absolutePath, sdlFilePath, sandboxAlias, sObjectType)
+        executeSalesforceInsert(file.absolutePath, sdlFilePath, sandboxAlias, sObjectType, externalId)
     }
 }
       
