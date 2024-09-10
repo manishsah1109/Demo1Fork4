@@ -54,7 +54,11 @@ jobs:
       - name: Test groovy Script
         env:
           SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
-        run: groovy test.groovy
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          groovy test.groovy
+          
         
       - name: Access config file
         run: cat file/Account.sdl
