@@ -20,7 +20,7 @@ def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandb
 
     println "Executing DataLoader insert for $csvFilePath..."
     //def dataInsertCmd = "sfdx force:data:bulk:upsert --sobjecttype $sObjectType --csvfile $csvFilePath --externalid $externalId --wait 10"
-    def dataInsertCmd = "sf force data bulk upsert --sobject $sObjectType --file $csvFilePath --external-id Id --wait 10"
+    def dataInsertCmd = "sf force data bulk upsert --sobject $sObjectType --file $csvFilePath --external-id id --wait 10"
 
     def insertProcess = dataInsertCmd.execute()
     insertProcess.waitFor()
@@ -37,7 +37,7 @@ def csvDirectoryPath = 'file/'
 def sdlFilePath = 'file/Account.sdl'
 def sandboxAlias = 'develop'
 def sObjectType = 'Account' // Replace with your Salesforce object API name
-def externalId = 'Id' // Replace with your external ID field
+def externalId = 'id' // Replace with your external ID field
 
 // Load SDL content
 def sdlContent = loadSdl(sdlFilePath)
