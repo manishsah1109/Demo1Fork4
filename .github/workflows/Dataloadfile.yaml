@@ -84,4 +84,6 @@ jobs:
         run: |
           export GROOVY_HOME=$PWD/libs/groovy
           export PATH=$GROOVY_HOME/bin:$PATH
+          export SFDX_HOME=$PWD/libs/sfdx-cli
+          export PATH=$SFDX_HOME/bin:$PATH
           groovy dataload.groovy
