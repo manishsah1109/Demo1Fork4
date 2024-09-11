@@ -1,4 +1,4 @@
-"id","AccountNumber","AccountSource","Active__c","Name"
-"001dM000006Amr8QAC","CD451796","","No","Edge Communications"
-"001dM00000TeiWHQAZ","CD451222","","Yes","Msni11"
-"001dM00000TeiWIQAZ","CD451111","","Yes","Msni22"
+"id","Active__c","Name"
+"001dM000006Amr8QAC","No","Edge Communications"
+"001dM00000TeiWHQAZ","Yes","Msni11"
+"001dM00000TeiWIQAZ","Yes","Msni22"
