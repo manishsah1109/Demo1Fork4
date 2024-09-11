@@ -20,7 +20,7 @@ def executeSalesforceInsert(String csvFilePath, String sdlFilePath, String sandb
 
     println "Executing DataLoader insert for $csvFilePath..."
     //def dataInsertCmd = "sfdx force:data:bulk:upsert --sobjecttype $sObjectType --csvfile $csvFilePath --externalid $externalId --wait 10"
-    def dataInsertCmd = "sf data upsert bulk --sobject $sObjectType --file $csvFilePath --external-id Id --wait 10"
+    def dataInsertCmd = "sf force data bulk upsert --sobject $sObjectType --file $csvFilePath --external-id Id --wait 10"
 
     def insertProcess = dataInsertCmd.execute()
     insertProcess.waitFor()
