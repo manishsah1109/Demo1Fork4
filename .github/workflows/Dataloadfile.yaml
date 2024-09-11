@@ -30,7 +30,7 @@ jobs:
       - name: Make Groovy & SF executable
         run: |
           chmod +x libs/groovy/bin/groovy
-          chmod +x libs/groovy/bin/sfdx-cli
+          chmod +x libs/sfdx-cli/bin/sf
 
 
       # Set up Groovy from the libs folder
