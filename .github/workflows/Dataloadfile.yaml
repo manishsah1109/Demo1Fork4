@@ -60,8 +60,10 @@ jobs:
       - name: Authenticate to Salesforce
         run: |
           echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
-          #sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
-          sf org login sfdx-url --file sfdxAuthUrl.txt --set-default
+          export SFDX_HOME=$PWD/libs/sfdx-cli
+          export PATH=$SFDX_HOME/bin:$PATH
+          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+          #sf org login sfdx-url --file sfdxAuthUrl.txt --set-default
 
       - name: Test groovy Script
         env:
