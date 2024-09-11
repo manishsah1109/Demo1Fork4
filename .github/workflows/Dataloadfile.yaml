@@ -63,7 +63,8 @@ jobs:
           export SFDX_HOME=$PWD/libs/sfdx-cli
           export PATH=$SFDX_HOME/bin:$PATH
           #sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
-          sf org login sfdx-url --file sfdxAuthUrl.txt --set-default
+          #sf org login sfdx-url --file sfdxAuthUrl.txt --set-default
+          sf org login sfdx-url -f sfdxAuthUrl.txt --set-default
 
       - name: Test groovy Script
         env:
