@@ -1,0 +1,77 @@
+name: Salesforce Data Bulk Operation
+
+on:
+  workflow_dispatch:
+    inputs:
+      csv_files:
+        description: 'Comma-separated CSV file names (e.g., Account.csv, Contact.csv)'
+        required: true
+        default: 'Account.csv, Contact.csv'
+      sandbox_name:
+        description: 'Salesforce sandbox name (stored in GitHub Secrets)'
+        required: true
+        default: 'sandbox'
+      operation:
+        description: 'Operation to perform (insert/upsert/delete)'
+        required: true
+        default: 'upsert'
+        type: choice
+        options:
+          - insert
+          - upsert
+          - delete
+      email_recipient:
+        description: 'Email to receive success/error report'
+        required: true
+
+jobs:
+  bulk-operation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Salesforce CLI
+      run: |
+        sudo npm install --global sfdx-cli
+
+    - name: Run Bulk Operation Script
+      env:
+        SF_USERNAME: ${{ secrets.SF_USERNAME }}
+        SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+        SF_TOKEN: ${{ secrets.SF_TOKEN }}
+        SF_SANDBOX: ${{ github.event.inputs.sandbox_name }}
+        EMAIL_RECIPIENT: ${{ github.event.inputs.email_recipient }}
+      run: |
+        groovy scripts/bulk_operation.groovy "${{ github.event.inputs.csv_files }}" "${{ github.event.inputs.operation }}" "${{ github.event.inputs.sandbox_name }}"
+
+    - name: Send email with results
+      if: always()
+      run: |
+        curl --request POST \
+        --url https://api.sendgrid.com/v3/mail/send \
+        --header 'Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}' \
+        --header 'Content-Type: application/json' \
+        --data '{
+          "personalizations": [
+            {
+              "to": [{"email": "${{ github.event.inputs.email_recipient }}"}]
+            }
+          ],
+          "from": {"email": "manivinu75@gmail.com"},
+          "subject": "Salesforce Bulk Operation: Results",
+          "content": [{"type": "text/plain", "value": "Salesforce bulk operation completed. See attached logs."}],
+          "attachments": [
+            {
+              "content": "'$(base64 logs/success.log)'",
+              "type": "text/plain",
+              "filename": "success.log"
+            },
+            {
+              "content": "'$(base64 logs/error.log)'",
+              "type": "text/plain",
+              "filename": "error.log"
+            }
+          ]
+        }'
