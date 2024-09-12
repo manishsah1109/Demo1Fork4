@@ -6,10 +6,11 @@ on:
       csv_files:
         description: 'CSV file names (comma-separated)'
         required: true
+        default: 'Account.csv'
       operation:
         description: 'Type of operation (insert/upsert/delete)'
         required: true
-        default: 'insert'
+        default: 'upsert'
 
 jobs:
   bulk-operation:
