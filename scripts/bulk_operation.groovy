@@ -65,12 +65,12 @@ def performBulkOperation(String csvFile, String operation) {
     def process = operationCommand.execute()
     process.waitFor()
 
-  if (process.exitValue() == 0) {
-       successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
-   } else {
-       errorLog.append("Error during ${operation} operation for ${objectName}.\n")
-    }
-}
+ // if (process.exitValue() == 0) {
+   //    successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
+   //} else {
+     //  errorLog.append("Error during ${operation} operation for ${objectName}.\n")
+    //}
+//}
 
 // Authenticate and run operations
 //authenticateSalesforce()
