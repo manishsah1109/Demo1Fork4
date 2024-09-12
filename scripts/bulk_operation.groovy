@@ -8,11 +8,11 @@ def operation = args[1]      // Operation (insert, upsert, delete)
 def sandboxName = args[2]     // Salesforce sandbox name
 
 // Paths for logging
-def successLog = new File("logs/success.log")
-def errorLog = new File("logs/error.log")
+#def successLog = new File("logs/success.log")
+#def errorLog = new File("logs/error.log")
 
-successLog.write('')  // Clear logs before starting
-errorLog.write('')
+#successLog.write('')  // Clear logs before starting
+#errorLog.write('')
 
 // Convert CSV file input to a list
 def csvFiles = csvFilesInput.split(',')
@@ -57,7 +57,7 @@ def performBulkOperation(String csvFile, String operation) {
             break
         default:
             println "Invalid operation: ${operation}"
-            errorLog.append("Invalid operation: ${operation}\n")
+            #errorLog.append("Invalid operation: ${operation}\n")
             System.exit(1)
     }
 
@@ -65,12 +65,12 @@ def performBulkOperation(String csvFile, String operation) {
     def process = operationCommand.execute()
     process.waitFor()
 
-    if (process.exitValue() == 0) {
-        successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
-    } else {
-        errorLog.append("Error during ${operation} operation for ${objectName}.\n")
-    }
-}
+   # if (process.exitValue() == 0) {
+    #    successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
+    #} else {
+     #   errorLog.append("Error during ${operation} operation for ${objectName}.\n")
+    #}
+#}
 
 // Authenticate and run operations
 //authenticateSalesforce()
