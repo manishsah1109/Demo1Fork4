@@ -14,16 +14,14 @@ def runSfdxBulkOperation(csvFile, operation) {
     def command
     switch (operation) {
         case "insert":
-            command = "sfdx force:data:bulk:insert -s ${objectName} -f ${csvFile} -i --json"
+            command = "sfdx force:data:bulk:insert -s ${objectName} -f file/${csvFile} -i --json"
             break
         case "upsert":
             // Assuming we have an external ID column named "Id" for upsert operations
-            //command = "sfdx force:data:bulk:upsert -s ${objectName} -f /home/runner/work/Demo1/Demo1/file/${csvFile} -i --json -w 10 -i Id"
             command = "sfdx force:data:bulk:upsert -s ${objectName} -f /home/runner/work/Demo1/Demo1/file/${csvFile} --json -w 10 -i Id"
-            //command = "sfdx force:data:bulk:upsert --sobjecttype ${objectName} --csvfile file/${csvFile} --externalid Id --wait 10"
             break
         case "delete":
-            command = "sfdx force:data:bulk:delete -s ${objectName} -f ${csvFile} -i --json"
+            command = "sfdx force:data:bulk:delete -s ${objectName} -f file/${csvFile} -i --json"
             break
         default:
             println "Error: Unsupported operation ${operation}. Use insert, upsert, or delete."
