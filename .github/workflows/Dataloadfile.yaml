@@ -1,0 +1,89 @@
+name: Run Salesforce DataLoader with Multiple CSV Files
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-dataloader:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+
+      # Checkout the tooling-branch to get the pre-installed libraries
+      #- name: Checkout Tooling Branch (for Groovy and SFDX CLI)
+       # run: git checkout Dataloader1 -- libs/
+
+      - name: Print Current Directory
+        run: pwd
+
+      - name: Make Groovy & SF executable
+        run: |
+          chmod +x libs/groovy/bin/groovy
+          chmod +x libs/sfdx-cli/bin/sf
+
+
+      # Set up Groovy from the libs folder
+      - name: Set Up Groovy
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          echo "GROOVY_HOME=$GROOVY_HOME"
+          echo "PATH=$PATH"
+          groovy --version  # Check Groovy version
+
+     # - name: Install Groovy
+      #  run: sudo apt-get install -y groovy
+
+
+      - name: Set Up Salesforce CLI
+        run: |
+          export SFDX_HOME=$PWD/libs/sfdx-cli
+          export PATH=$SFDX_HOME/bin:$PATH
+          sf --version  # Check SFDX CLI version
+          
+      #- name: Install Salesforce CLI
+       # run: |
+       #   npm install -g sfdx-cli
+       #   sfdx version
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
+          export SFDX_HOME=$PWD/libs/sfdx-cli
+          export PATH=$SFDX_HOME/bin:$PATH
+          #sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+          #sf org login sfdx-url --file sfdxAuthUrl.txt --set-default
+          sf org login sfdx-url -f sfdxAuthUrl.txt --set-default
+
+      - name: Test groovy Script
+        env:
+          SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          groovy test.groovy
+          
+        
+      - name: Access config file
+        run: cat file/Account.sdl
+
+      - name: Run DataLoader Script
+        env:
+          SF_SANDBOX_ALIAS: ${{ secrets.SF_SANDBOX_ALIAS }}
+        run: |
+          export GROOVY_HOME=$PWD/libs/groovy
+          export PATH=$GROOVY_HOME/bin:$PATH
+          export SFDX_HOME=$PWD/libs/sfdx-cli
+          export PATH=$SFDX_HOME/bin:$PATH
+          groovy dataload.groovy
