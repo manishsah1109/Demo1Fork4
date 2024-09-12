@@ -6,11 +6,11 @@ on:
       csv_files:
         description: 'Comma-separated CSV file names (e.g., Account.csv, Contact.csv)'
         required: true
-        default: 'Account.csv, Contact.csv'
+        default: 'Account.csv'
       sandbox_name:
         description: 'Salesforce sandbox name (stored in GitHub Secrets)'
         required: true
-        default: 'sandbox'
+        default: 'develop'
       operation:
         description: 'Operation to perform (insert/upsert/delete)'
         required: true
