@@ -47,14 +47,14 @@ def performBulkOperation(String csvFile, String operation) {
 
     switch (operation) {
         case 'insert':
-            operationCommand = "sf data create bulk --sobject ${objectName} --file data/${csvFile} --wait 10"
+            operationCommand = "sf data create bulk --sobject ${objectName} --file file/${csvFile} --wait 10"
             break
         case 'upsert':
-            def externalId = 'ExternalId__c'  // Assuming ExternalId field, adjust as needed
-            operationCommand = "sf data upsert bulk --sobject ${objectName} --file data/${csvFile} --external-id ${externalId} --wait 10"
+            def externalId = 'id'  // Assuming ExternalId field, adjust as needed
+            operationCommand = "sf data upsert bulk --sobject ${objectName} --file file/${csvFile} --external-id ${externalId} --wait 10"
             break
         case 'delete':
-            operationCommand = "sf data delete bulk --sobject ${objectName} --file data/${csvFile} --wait 10"
+            operationCommand = "sf data delete bulk --sobject ${objectName} --file file/${csvFile} --wait 10"
             break
         default:
             println "Invalid operation: ${operation}"
