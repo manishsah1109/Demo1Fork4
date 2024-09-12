@@ -70,7 +70,7 @@ def performBulkOperation(String csvFile, String operation) {
    //} else {
      //  errorLog.append("Error during ${operation} operation for ${objectName}.\n")
     //}
-//}
+}
 
 // Authenticate and run operations
 //authenticateSalesforce()
