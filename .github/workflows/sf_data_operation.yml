@@ -20,9 +20,9 @@ on:
           - insert
           - upsert
           - delete
-      email_recipient:
-        description: 'Email to receive success/error report'
-        required: true
+   #   email_recipient:
+    #    description: 'Email to receive success/error report'
+     #   required: true
 
 jobs:
   bulk-operation:
@@ -46,32 +46,31 @@ jobs:
       run: |
         groovy scripts/bulk_operation.groovy "${{ github.event.inputs.csv_files }}" "${{ github.event.inputs.operation }}" "${{ github.event.inputs.sandbox_name }}"
 
-    - name: Send email with results
-      if: always()
-      run: |
-        curl --request POST \
-        --url https://api.sendgrid.com/v3/mail/send \
-        --header 'Authorization: Bearer ${{ secrets.SENDGRID_API_KEY }}' \
-        --header 'Content-Type: application/json' \
-        --data '{
-          "personalizations": [
-            {
-              "to": [{"email": "${{ github.event.inputs.email_recipient }}"}]
-            }
-          ],
-          "from": {"email": "manivinu75@gmail.com"},
-          "subject": "Salesforce Bulk Operation: Results",
-          "content": [{"type": "text/plain", "value": "Salesforce bulk operation completed. See attached logs."}],
-          "attachments": [
-            {
-              "content": "'$(base64 logs/success.log)'",
-              "type": "text/plain",
-              "filename": "success.log"
-            },
-            {
-              "content": "'$(base64 logs/error.log)'",
-              "type": "text/plain",
-              "filename": "error.log"
-            }
-          ]
-        }'
+   # - name: Send email with results
+    #if: always()
+     # run: |
+      #  curl --request POST \
+       # --url https://api.sendgrid.com/v3/mail/send \
+        #-header 'Content-Type: application/json' \
+      #  --data '{
+      #    "personalizations": [
+      #      {
+      #        "to": [{"email": "${{ github.event.inputs.email_recipient }}"}]
+      #      }
+      #    ],
+      #    "from": {"email": "manivinu75@gmail.com"},
+      #    "subject": "Salesforce Bulk Operation: Results",
+      #    "content": [{"type": "text/plain", "value": "Salesforce bulk operation completed. See attached logs."}],
+      #    "attachments": [
+      #      {
+      #        "content": "'$(base64 logs/success.log)'",
+      #        "type": "text/plain",
+      #        "filename": "success.log"
+      #      },
+      #      {
+      #        "content": "'$(base64 logs/error.log)'",
+       #       "type": "text/plain",
+      #        "filename": "error.log"
+      #      }
+      #    ]
+      #  }'
