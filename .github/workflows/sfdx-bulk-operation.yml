@@ -20,16 +20,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Salesforce CLI
-        uses: salesforcecli/sfdx-action@v1
-        with:
-          version: 'latest'
+      - name: Install Java (required for Groovy)
+        run: sudo apt-get install -y openjdk-11-jdk
 
-      - name: Set up Java (for Groovy)
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
+      - name: Install Groovy
+        run: sudo apt-get install -y groovy
+
+      - name: Set up Salesforce CLI
+        run: |
+          sudo npm install --global sfdx-cli
+        #npm install --global @salesforce/cl
+        #npm install @salesforce/cli@2.57.7
+          sfdx --version
+
+      - name: Authenticate to Salesforce
+        run: |
+          echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
+          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+        #sf org login sfdx-url -f sfdxAuthUrl.txt --set-default
 
       - name: Run Bulk Operation Script
         run: |
