@@ -22,12 +22,11 @@ def authenticateSalesforce() {
     def sfUsername = System.getenv('SF_USERNAME')
     def sfPassword = System.getenv('SF_PASSWORD')
     def sfToken = System.getenv('SF_TOKEN')
-    def sfSandbox = sandboxName
 
     def authCommand = """
-        sf org login password --username ${sfUsername} --password ${sfPassword}${sfToken} --instance-url https://${sfSandbox}.my.salesforce.com --set-default
+        sf org login password --username ${sfUsername} --password ${sfPassword}${sfToken} --instance-url https://${sandboxName}.my.salesforce.com --set-default
     """
-    println "Authenticating to Salesforce ${sfSandbox}..."
+    println "Authenticating to Salesforce ${sandboxName}..."
     def authProcess = authCommand.execute()
     authProcess.waitFor()
 
