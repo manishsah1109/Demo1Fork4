@@ -73,7 +73,7 @@ def performBulkOperation(String csvFile, String operation) {
 }
 
 // Authenticate and run operations
-authenticateSalesforce()
+//authenticateSalesforce()
 
 csvFiles.each { csvFile ->
     performBulkOperation(csvFile.trim(), operation)
