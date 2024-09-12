@@ -18,26 +18,26 @@ errorLog.write('')
 def csvFiles = csvFilesInput.split(',')
 
 // Salesforce authentication using credentials stored in GitHub Secrets
-def authenticateSalesforce() {
-    def sfUsername = System.getenv('SF_USERNAME')
-    def sfPassword = System.getenv('SF_PASSWORD')
-    def sfToken = System.getenv('SF_TOKEN')
+//def authenticateSalesforce() {
+  //  def sfUsername = System.getenv('SF_USERNAME')
+ //   def sfPassword = System.getenv('SF_PASSWORD')
+  //  def sfToken = System.getenv('SF_TOKEN')
+//
+//    def authCommand = """
+//        sf org login password --username ${sfUsername} --password ${sfPassword}${sfToken} --instance-url https://${sandboxName}.my.salesforce.com --set-default
+ //   """
+ //   println "Authenticating to Salesforce ${sandboxName}..."
+  //  def authProcess = authCommand.execute()
+  //  authProcess.waitFor()
 
-    def authCommand = """
-        sf org login password --username ${sfUsername} --password ${sfPassword}${sfToken} --instance-url https://${sandboxName}.my.salesforce.com --set-default
-    """
-    println "Authenticating to Salesforce ${sandboxName}..."
-    def authProcess = authCommand.execute()
-    authProcess.waitFor()
+    //if (authProcess.exitValue() != 0) {
+     //   println "Salesforce authentication failed."
+       // errorLog.append("Salesforce authentication failed.\n")
+        //System.exit(1)
+    //}
 
-    if (authProcess.exitValue() != 0) {
-        println "Salesforce authentication failed."
-        errorLog.append("Salesforce authentication failed.\n")
-        System.exit(1)
-    }
-
-    println "Authentication successful."
-}
+    //println "Authentication successful."
+//}
 
 // Perform bulk operation for each CSV file
 def performBulkOperation(String csvFile, String operation) {
