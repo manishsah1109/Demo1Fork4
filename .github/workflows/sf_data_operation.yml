@@ -43,11 +43,13 @@ jobs:
         #sudo npm install --global sfdx-cli
         #npm install --global @salesforce/cl
         npm install @salesforce/cli@2.57.7
+        sf --version
 
     - name: Authenticate to Salesforce
       run: |
         echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
         #sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+        sf --version
         sf org login sfdx-url -f sfdxAuthUrl.txt --set-default
 
     - name: Run Bulk Operation Script
