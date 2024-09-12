@@ -41,7 +41,8 @@ jobs:
     - name: Set up Salesforce CLI
       run: |
         #sudo npm install --global sfdx-cli
-        npm install --global @salesforce/cl
+        #npm install --global @salesforce/cl
+        npm install @salesforce/cli@2.57.7
 
     - name: Authenticate to Salesforce
       run: |
