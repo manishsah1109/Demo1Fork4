@@ -1,10 +1,23 @@
 name: Run Salesforce DataLoader with Multiple CSV Files
 
-on:
-  pull_request:
-    branches:
-      - main
+# pull_request:
+ #   branches:
+  #    - main
 
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose an environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+          
 jobs:
   run-dataloader:
     runs-on: ubuntu-latest
