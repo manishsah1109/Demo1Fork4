@@ -1,10 +1,23 @@
 name: Salesforce CI/CD
 
+#on:
+ # pull_request:
+  #  branches:
+   #   - main1
+    #  - develop1
+
 on:
-  pull_request:
-    branches:
-      - main1
-      - develop1
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose an environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
 
 jobs:
   salesforce-ci:
