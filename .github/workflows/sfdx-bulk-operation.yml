@@ -1,0 +1,35 @@
+name: Salesforce Data Bulk Operation
+
+on:
+  workflow_dispatch:
+    inputs:
+      csv_files:
+        description: 'CSV file names (comma-separated)'
+        required: true
+      operation:
+        description: 'Type of operation (insert/upsert/delete)'
+        required: true
+        default: 'insert'
+
+jobs:
+  bulk-operation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Salesforce CLI
+        uses: salesforcecli/sfdx-action@v1
+        with:
+          version: 'latest'
+
+      - name: Set up Java (for Groovy)
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Run Bulk Operation Script
+        run: |
+          groovy bulkOperations.groovy "${{ github.event.inputs.csv_files }}" "${{ github.event.inputs.operation }}"
