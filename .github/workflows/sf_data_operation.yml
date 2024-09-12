@@ -32,6 +32,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Install Java (required for Groovy)
+      run: sudo apt-get install -y openjdk-11-jdk
+
+    - name: Install Groovy
+      run: sudo apt-get install -y groovy
+
     - name: Set up Salesforce CLI
       run: |
         sudo npm install --global sfdx-cli
@@ -42,7 +48,6 @@ jobs:
         SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
         SF_TOKEN: ${{ secrets.SF_TOKEN }}
         SF_SANDBOX: ${{ github.event.inputs.sandbox_name }}
-        EMAIL_RECIPIENT: ${{ github.event.inputs.email_recipient }}
       run: |
         groovy scripts/bulk_operation.groovy "${{ github.event.inputs.csv_files }}" "${{ github.event.inputs.operation }}" "${{ github.event.inputs.sandbox_name }}"
 
