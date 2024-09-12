@@ -1,63 +1,63 @@
 #!/usr/bin/env groovy
 
-import groovy.io.FileType
+if (args.length != 3) {
+    println "Usage: groovy bulk_operation.groovy <csv_files> <operation> <sandbox_name>"
+    System.exit(1)
+}
 
-// Load arguments passed from GitHub workflow
-def csvFilesInput = args[0]  // CSV file names (comma-separated)
-def operation = args[1]      // Operation (insert, upsert, delete)
-def sandboxName = args[2]     // Salesforce sandbox name
+def csvFilesInput = args[0]
+def operation = args[1]
+def sandboxName = args[2]
 
-// Paths for logging
-//#def successLog = new File("logs/success.log")
-//#def errorLog = new File("logs/error.log")
+def successLog = new File("logs/success.log")
+def errorLog = new File("logs/error.log")
 
-//#successLog.write('')  // Clear logs before starting
-//#errorLog.write('')
+successLog.write('')
+errorLog.write('')
 
-// Convert CSV file input to a list
 def csvFiles = csvFilesInput.split(',')
 
-// Salesforce authentication using credentials stored in GitHub Secrets
-//def authenticateSalesforce() {
-  //  def sfUsername = System.getenv('SF_USERNAME')
- //   def sfPassword = System.getenv('SF_PASSWORD')
-  //  def sfToken = System.getenv('SF_TOKEN')
-//
-//    def authCommand = """
-//        sf org login password --username ${sfUsername} --password ${sfPassword}${sfToken} --instance-url https://${sandboxName}.my.salesforce.com --set-default
- //   """
- //   println "Authenticating to Salesforce ${sandboxName}..."
-  //  def authProcess = authCommand.execute()
-  //  authProcess.waitFor()
+def authenticateSalesforce() {
+    def sfUsername = System.getenv('SF_USERNAME')
+    def sfPassword = System.getenv('SF_PASSWORD')
+    def sfToken = System.getenv('SF_TOKEN')
 
-    //if (authProcess.exitValue() != 0) {
-     //   println "Salesforce authentication failed."
-       // errorLog.append("Salesforce authentication failed.\n")
-        //System.exit(1)
-    //}
+    def authCommand = """
+        sfdx force:auth:web:login --setalias develop --instanceurl https:login.salesforce.com --setdefaultusername
+    """
+    println "Authenticating to Salesforce develop..."
+    def authProcess = authCommand.execute()
+    authProcess.waitFor()
 
-    //println "Authentication successful."
-//}
+    if (authProcess.exitValue() != 0) {
+        println "Salesforce authentication failed. Exit code: ${authProcess.exitValue()}"
+        println "Error Output: ${authProcess.err.text}"
+        errorLog.append("Salesforce authentication failed. Exit code: ${authProcess.exitValue()}\n")
+        errorLog.append("Error Output: ${authProcess.err.text}\n")
+        System.exit(1)
+    }
 
-// Perform bulk operation for each CSV file
+    println "Authentication successful."
+}
+
 def performBulkOperation(String csvFile, String operation) {
     def objectName = csvFile.replace(".csv", "")
     def operationCommand = ""
 
     switch (operation) {
         case 'insert':
-            operationCommand = "sf data create bulk --sobject ${objectName} --csvfile file/${csvFile} --wait 10"
+            operationCommand = "sfdx force:data:bulk:insert --sobjecttype ${objectName} --csvfile data/${csvFile} --wait 10"
             break
         case 'upsert':
-            def externalId = 'id'  // Assuming ExternalId field, adjust as needed
-            operationCommand = "sfdx force:data:bulk:upsert --sobject ${objectName} --csvfile file/${csvFile} --external-id ${externalId} --wait 10"
+            def externalId = 'ExternalId__c'
+            operationCommand = "sfdx force:data:bulk:upsert --sobjecttype ${objectName} --csvfile data/${csvFile} --externalid ${externalId} --wait 10"
             break
         case 'delete':
-            operationCommand = "sf data delete bulk --sobject ${objectName} --csvfile file/${csvFile} --wait 10"
+            operationCommand = "sfdx force:data:bulk:delete --sobjecttype ${objectName} --csvfile data/${csvFile} --wait 10"
             break
         default:
             println "Invalid operation: ${operation}"
-            //#errorLog.append("Invalid operation: ${operation}\n")
+            errorLog.append("Invalid operation: ${operation}\n")
             System.exit(1)
     }
 
@@ -65,15 +65,18 @@ def performBulkOperation(String csvFile, String operation) {
     def process = operationCommand.execute()
     process.waitFor()
 
- // if (process.exitValue() == 0) {
-   //    successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
-   //} else {
-     //  errorLog.append("Error during ${operation} operation for ${objectName}.\n")
-    //}
+    if (process.exitValue() == 0) {
+        successLog.append("${operation.capitalize()} operation for ${objectName} completed successfully.\n")
+        println "Success: ${operation.capitalize()} operation for ${objectName} completed."
+    } else {
+        errorLog.append("Error during ${operation} operation for ${objectName}. Exit code: ${process.exitValue()}\n")
+        errorLog.append("Error Output: ${process.err.text}\n")
+        println "Error: ${operation.capitalize()} operation for ${objectName} failed. Exit code: ${process.exitValue()}"
+        println "Error Output: ${process.err.text}"
+    }
 }
 
-// Authenticate and run operations
-//authenticateSalesforce()
+authenticateSalesforce()
 
 csvFiles.each { csvFile ->
     performBulkOperation(csvFile.trim(), operation)
