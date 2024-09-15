@@ -18,7 +18,7 @@ def runSfdxBulkOperation(csvFile, operation) {
             break
         case "upsert":
             // Assuming we have an external ID column named "Id" for upsert operations
-            command = "sfdx force:data:bulk:upsert -s ${objectName} -f /home/runner/work/Demo1/Demo1/file/${csvFile} --json -w 10 -i Id"
+            command = "sfdx force:data:bulk:upsert -s ${objectName} -f /home/runner/work/Demo1/Demo1/file/${csvFile} -w 10 -i Id"
             break
         case "delete":
             command = "sfdx force:data:bulk:delete -s ${objectName} -f file/${csvFile} -i Id --json"
