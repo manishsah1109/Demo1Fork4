@@ -88,4 +88,41 @@ jobs:
               `
             });
 
+      - name: Post Salesforce validation failure comment
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context } = github;
+            const fs = require('fs');
+            const validationLog = fs.readFileSync('truncated_log.txt', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `
+              ### ❌ Salesforce Validation Failed
+
+              😞 **Validation encountered issues!**
+
+              There were errors during the validation process. Please review the following Salesforce validation logs:
+
+              ---
+
+              **Validation Log (last 30 lines)**:
+              \`\`\`
+              ${validationLog}
+              \`\`\`
+
+              ---
+
+              **Validation Summary**:
+              - Branch: \`${context.payload.pull_request.head.ref}\`
+              - PR: #${context.payload.pull_request.number}
+              - Author: ${context.payload.pull_request.user.login}
+
+              _Please check the logs and fix the errors before retrying._
+              `
+            });
+
           
