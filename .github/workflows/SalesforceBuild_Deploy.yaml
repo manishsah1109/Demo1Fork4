@@ -45,3 +45,17 @@ jobs:
       - name: Validate Deployment
         run: |
           sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests > validation_log.txt 2>&1 || exit 1
+
+
+      - name: Capture validation log
+        id: capture-log
+        run: |
+          # Extract a part of the log to display in the comment (for brevity)
+          tail -n 30 validation_log.txt > truncated_log.txt
+
+
+      - name: Post Salesforce validation success comment
+        if: success()
+        run: |
+          # Call the JavaScript file directly
+          node comment.js
