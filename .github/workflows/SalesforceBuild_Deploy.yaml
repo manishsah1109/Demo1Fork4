@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - dev
+      - Dev
 
 jobs:
   salesforce-ci:
@@ -44,4 +44,4 @@ jobs:
 
       - name: Validate Deployment
         run: |
-          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests > validation_log.txt 2>&1 || exit 1
