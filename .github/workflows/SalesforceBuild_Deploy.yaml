@@ -57,7 +57,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const { context } = github;
             const fs = require('fs');
             const validationLog = fs.readFileSync('truncated_log.txt', 'utf8');
             github.rest.issues.createComment({
@@ -88,4 +87,5 @@ jobs:
               _No issues detected. You're good to go!_
               `
             });
+
           
