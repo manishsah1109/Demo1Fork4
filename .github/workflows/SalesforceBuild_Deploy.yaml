@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - develop
+      - Dev
 
 jobs:
   salesforce-ci:
@@ -25,7 +25,7 @@ jobs:
       - name: Authenticate to Salesforce
         run: |
           echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
-          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+          sfdx auth:sfdxurl:store -f auth_url.txt -s
 
       - name: Build project
         run: |
@@ -41,6 +41,16 @@ jobs:
         with:
           name: build-artifact
           path: output/
+
+      - name: Filter profiles from delta
+        run: |
+          # Check if any profiles have changed in the delta package
+          if ls build-artifact/force-app/main/default/profiles/*.profile-meta.xml 1> /dev/null 2>&1; then
+            echo "Profiles found in delta"
+          else
+            echo "No profile changes detected, skipping validation."
+            exit 0
+          fi
 
       - name: Validate Deployment
         run: |
