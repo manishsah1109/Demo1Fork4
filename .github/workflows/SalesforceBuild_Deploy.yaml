@@ -25,7 +25,7 @@ jobs:
       - name: Authenticate to Salesforce
         run: |
           echo ${{ secrets.SFDX_AUTH_URL }} > auth_url.txt
-          sfdx auth:sfdxurl:store -f sfdxAuthUrl.txt -s
+          sfdx auth:sfdxurl:store -f auth_url.txt -s
 
       - name: Build project
         run: |
