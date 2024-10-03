@@ -44,7 +44,7 @@ jobs:
 
       - name: Validate Deployment
         run: |
-          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests --json > validation_log.txt 2>&1 || exit 1
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests > validation_log.txt 2>&1 || exit 1
 
       - name: Capture validation log
         id: capture-log
