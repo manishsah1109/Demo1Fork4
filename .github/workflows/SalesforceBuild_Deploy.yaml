@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-      - develop
+      - Dev
 
 jobs:
   salesforce-ci:
@@ -44,4 +44,105 @@ jobs:
 
       - name: Validate Deployment
         run: |
-          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests > validation_log.txt 2>&1 || exit 1
+
+      - name: Capture validation log
+        id: capture-log
+        run: |
+          # Extract a part of the log to display in the comment (for brevity)
+          tail -n 30 validation_log.txt > truncated_log.txt
+
+      - name: Post Salesforce validation success comment
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const validationLog = fs.readFileSync('truncated_log.txt', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `
+              ### ✅ Salesforce Validation Successful
+
+              🚀 **Validation passed successfully!**
+
+              All metadata changes have been validated against Salesforce.
+
+              ---
+
+              **Validation Log (last 30 lines)**:
+              \`\`\`
+              ${validationLog}
+              \`\`\`
+
+              ---
+
+              **Validation Summary**:
+              - Branch: \`${context.payload.pull_request.head.ref}\`
+              - PR: #${context.payload.pull_request.number}
+              - Author: ${context.payload.pull_request.user.login}
+
+              _No issues detected. You're good to go!_
+              `
+            });
+
+      - name: Capture validation failure log
+        id: capture-log-f
+        if: failure()
+        run: |
+          # Extract a part of the log to display in the comment (for brevity)
+          tail -n 30 validation_log.txt > truncated_log.txt
+
+
+      - name: Post Salesforce validation failure comment
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('truncated_log.txt')) {
+              const validationLog = fs.readFileSync('truncated_log.txt', 'utf8');
+              github.rest.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `
+                ### ❌ Salesforce Validation Failed
+
+                😞 **Validation encountered issues!**
+
+                There were errors during the validation process. Please review the following Salesforce validation logs:
+
+                ---
+
+                **Validation Log (last 30 lines)**:
+                \`\`\`
+                ${validationLog}
+                \`\`\`
+
+                ---
+
+                **Validation Summary**:
+                - Branch: \`${context.payload.pull_request.head.ref}\`
+                - PR: #${context.payload.pull_request.number}
+                - Author: ${context.payload.pull_request.user.login}
+
+                _Please check the logs and fix the errors before retrying._
+                `
+              });
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `
+                ### ❌ Salesforce Validation Failed
+
+                😞 **Validation encountered issues!**
+
+                However, no log was captured. Please check the action run for more details.
+                `
+              });
+            }
