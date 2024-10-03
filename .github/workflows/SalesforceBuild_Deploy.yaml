@@ -44,7 +44,7 @@ jobs:
 
       - name: Validate Deployment
         run: |
-          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests > validation_log.txt 2>&1 || exit 1
+          sf project deploy validate --manifest output/package/package.xml --test-level RunLocalTests --json > validation_log.txt 2>&1 || exit 1
 
       - name: Capture validation log
         id: capture-log
@@ -87,6 +87,14 @@ jobs:
               _No issues detected. You're good to go!_
               `
             });
+
+      - name: Capture validation log
+        id: capture-log
+        if: failure()
+        run: |
+          # Extract a part of the log to display in the comment (for brevity)
+          tail -n 30 validation_log.txt > truncated_log.txt
+
 
       - name: Post Salesforce validation failure comment
         if: failure()
