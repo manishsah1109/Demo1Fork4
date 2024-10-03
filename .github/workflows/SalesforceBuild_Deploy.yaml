@@ -88,8 +88,8 @@ jobs:
               `
             });
 
-      - name: Capture validation log
-        id: capture-log
+      - name: Capture validation failure log
+        id: capture-log-f
         if: failure()
         run: |
           # Extract a part of the log to display in the comment (for brevity)
